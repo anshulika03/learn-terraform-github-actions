@@ -1,0 +1,28 @@
+name: Test-Latest-Release-Download
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  build:
+    name: Build
+    strategy:
+      matrix:
+        runs-on: [ubuntu-latest, macos-latest, windows-latest]
+      fail-fast: false
+    runs-on: ${{ matrix.runs-on }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # download packages from latest release
+      - name: Download Debian packages from latest release
+        uses: actions/download-release@v2
+        with:
+          path: ./latestreleaseartifacts
+        run: |
+          gh release download --pattern '*.deb'
