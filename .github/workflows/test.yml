@@ -62,7 +62,7 @@ jobs:
 
       # Test downloading both artifacts at once
       - name: Download all Artifacts
-        uses: ./
+        uses: actions/download-artifact@v1
         with:
           path: ./alldownloadedartifacts
 
