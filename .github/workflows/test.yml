@@ -42,7 +42,7 @@ jobs:
 
       # Test downloading a single artifact
       - name: Download artifact A
-        uses: ./
+        uses: actions/download-artifact@v1
         with:
           name: 'Artifact-A'
           path: ./DownloadedArtifacts
