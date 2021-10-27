@@ -11,11 +11,50 @@ jobs:
       uses: dsaltares/fetch-gh-release-asset@master
       with:
         version: "tags/master"
+        file: "viewer-request.js"
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Fetch GH Release Asset
+      uses: dsaltares/fetch-gh-release-asset@master
+      with:
+        version: "tags/master"
+        file: "viewer-response.js"
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Fetch GH Release Asset
+      uses: dsaltares/fetch-gh-release-asset@master
+      with:
+        version: "tags/master"
         file: "origin-request.js"
         token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Fetch GH Release Asset
+      uses: dsaltares/fetch-gh-release-asset@master
+      with:
+        version: "tags/master"
+        file: "origin-response.js"
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Zip
+      run: zip viewer-request.zip viewer-request.js
+    
+    - name: Zip
+      run: zip viewer-response.zip viewer-response.js
 
     - name: Zip
       run: zip origin-request.zip origin-request.js
 
+    - name: Zip
+      run: zip origin-response.zip origin-response.js
+
     - name: Release to S3
-      run: bash scripts/pipeline/release.sh "use1-iac-lambda-artifacts-prod" "origin-request/origin-request.zip" ${{secrets.AWS_ACCESS_KEY_ID}} ${{secrets.AWS_SECRET_ACCESS_KEY}} "origin-request.zip"
+      run: bash scripts/pipeline/release.sh "prod-techops-edgelambda-artifacts" "viewer-request.zip" ${{secrets.AWS_ACCESS_KEY_ID}} ${{secrets.AWS_SECRET_ACCESS_KEY}} "viewer-request.zip"
+
+    - name: Release to S3
+      run: bash scripts/pipeline/release.sh "prod-techops-edgelambda-artifacts" "viewer-response.zip" ${{secrets.AWS_ACCESS_KEY_ID}} ${{secrets.AWS_SECRET_ACCESS_KEY}} "viewer-response.zip"
+
+    - name: Release to S3
+      run: bash scripts/pipeline/release.sh "prod-techops-edgelambda-artifacts" "origin-request.zip" ${{secrets.AWS_ACCESS_KEY_ID}} ${{secrets.AWS_SECRET_ACCESS_KEY}} "origin-request.zip"
+
+    - name: Release to S3
+      run: bash scripts/pipeline/release.sh "prod-techops-edgelambda-artifacts" "origin-response.zip" ${{secrets.AWS_ACCESS_KEY_ID}} ${{secrets.AWS_SECRET_ACCESS_KEY}} "origin-response.zip"
