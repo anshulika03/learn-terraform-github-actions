@@ -19,18 +19,25 @@ jobs:
         with:
           # terraform_version: 0.13.0:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          path: aws
 
       - name: Terraform Format
         id: fmt
         run: terraform fmt -check
+        with:
+          path: aws
 
       - name: Terraform Init
         id: init
         run: terraform init
+        with:
+          path: aws
       
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
+        with:
+          path: aws
 
       - name: Terraform Plan
         id: plan
@@ -44,6 +51,7 @@ jobs:
           PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: aws
           script: |
             const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
             #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
@@ -70,7 +78,9 @@ jobs:
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1
+        with:
+          path: aws
 
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve
+      # - name: Terraform Apply
+      #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      #   run: terraform apply -auto-approve
